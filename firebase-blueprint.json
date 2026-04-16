@@ -1,0 +1,62 @@
+{
+  "entities": {
+    "Movie": {
+      "title": "Movie",
+      "description": "A movie entry in the database",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "The title of the movie" },
+        "imageUrl": { "type": "string", "format": "url", "description": "Poster image URL" },
+        "description": { "type": "string", "description": "Movie synopsis" },
+        "trailerUrl": { "type": "string", "format": "url", "description": "YouTube trailer URL" },
+        "videoUrl": { "type": "string", "format": "url", "description": "External watch link" },
+        "category": { "type": "string", "enum": ["Trending", "Latest", "Popular", "Recommended"], "description": "Display category" },
+        "genre": { "type": "string", "description": "Genre (e.g. Action, Comedy)" },
+        "rating": { "type": "number", "description": "Expert rating out of 10" },
+        "userRating": { "type": "number", "description": "Average user rating (1-5)" },
+        "ratingCount": { "type": "number", "description": "Number of user ratings" },
+        "year": { "type": "number", "description": "Release year" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["title", "imageUrl", "description", "category", "genre", "rating", "year"]
+    },
+    "UserRating": {
+      "title": "UserRating",
+      "description": "A user's rating for a movie",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "movieId": { "type": "string" },
+        "rating": { "type": "number", "minimum": 1, "maximum": 5 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "movieId", "rating"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile and favorites",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "favorites": { "type": "array", "items": { "type": "string" }, "description": "List of movie IDs" },
+        "role": { "type": "string", "enum": ["user", "admin"] }
+      },
+      "required": ["uid", "email", "role"]
+    }
+  },
+  "firestore": {
+    "/movies/{movieId}": {
+      "schema": "Movie",
+      "description": "Collection of movies"
+    },
+    "/movies/{movieId}/ratings/{userId}": {
+      "schema": "UserRating",
+      "description": "User ratings for a movie"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and favorites"
+    }
+  }
+}
